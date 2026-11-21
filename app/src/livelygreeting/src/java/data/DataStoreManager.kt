@@ -11,5 +11,6 @@ class DataStoreManager {
         val Context.dataStore by preferencesDataStore(name = DATASTORE_NAME)
 
         val hideTargetWithoutComplicationsKey = booleanPreferencesKey("target_hide_no_complications")
+        val scrollLongTextKey = booleanPreferencesKey("target_scroll_long_text")
     }
 }
