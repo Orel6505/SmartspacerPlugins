@@ -2,6 +2,8 @@ package targets
 
 import android.content.ComponentName
 import android.content.Intent
+import data.DataStoreManager.Companion.changeOnUnlockKey
+import services.UnlockService
 import android.icu.util.Calendar
 import android.text.TextUtils
 import androidx.core.graphics.drawable.toIcon
@@ -27,6 +29,7 @@ class LivelyGreetingTarget: SmartspacerTargetProvider() {
     override fun getSmartspaceTargets(smartspacerId: String): List<SmartspaceTarget> {
         val hideNoComplications = provideContext().dataStore.get(hideTargetWithoutComplicationsKey) == true
         val scrollLongText = provideContext().dataStore.get(scrollLongTextKey) == true
+        UnlockService.update(provideContext(), provideContext().dataStore.get(changeOnUnlockKey) != false)
 
         val morningString = context!!.resources.getStringArray(R.array.quickspace_psa_morning)
         val lateEveningStrings = context!!.resources.getStringArray(R.array.quickspace_psa_late_evening)
@@ -66,6 +69,8 @@ class LivelyGreetingTarget: SmartspacerTargetProvider() {
 
             else -> funnyGreeting
         }
+
+        android.util.Log.d("LivelyGreeting", "getSmartspaceTargets -> \"$greeting\"")
 
         return listOf(TargetTemplate.Basic(
             id = "greeting_target_$smartspacerId",
