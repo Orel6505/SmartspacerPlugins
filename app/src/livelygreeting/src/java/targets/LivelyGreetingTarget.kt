@@ -3,6 +3,7 @@ package targets
 import android.content.ComponentName
 import android.content.Intent
 import android.icu.util.Calendar
+import android.text.TextUtils
 import androidx.core.graphics.drawable.toIcon
 import com.kieronquinn.app.smartspacer.sdk.model.SmartspaceTarget
 import com.kieronquinn.app.smartspacer.sdk.model.uitemplatedata.Text
@@ -12,6 +13,7 @@ import com.mikepenz.iconics.IconicsDrawable
 import com.mikepenz.iconics.typeface.library.community.material.CommunityMaterial
 import data.DataStoreManager.Companion.dataStore
 import data.DataStoreManager.Companion.hideTargetWithoutComplicationsKey
+import data.DataStoreManager.Companion.scrollLongTextKey
 import nodomain.pacjo.smartspacer.plugin.R
 import nodomain.pacjo.smartspacer.plugin.utils.get
 import ui.activities.ConfigurationActivity
@@ -24,6 +26,7 @@ class LivelyGreetingTarget: SmartspacerTargetProvider() {
 
     override fun getSmartspaceTargets(smartspacerId: String): List<SmartspaceTarget> {
         val hideNoComplications = provideContext().dataStore.get(hideTargetWithoutComplicationsKey) == true
+        val scrollLongText = provideContext().dataStore.get(scrollLongTextKey) == true
 
         val morningString = context!!.resources.getStringArray(R.array.quickspace_psa_morning)
         val lateEveningStrings = context!!.resources.getStringArray(R.array.quickspace_psa_late_evening)
@@ -68,7 +71,10 @@ class LivelyGreetingTarget: SmartspacerTargetProvider() {
         return listOf(TargetTemplate.Basic(
             id = "greeting_target_$smartspacerId",
             componentName = ComponentName(provideContext(), LivelyGreetingTarget::class.java),
-            title = Text(greeting),
+            title = Text(
+                greeting,
+                truncateAtType = if (scrollLongText) TextUtils.TruncateAt.MARQUEE else TextUtils.TruncateAt.END
+            ),
             subtitle = null,
             icon = null
         ).create().apply {
