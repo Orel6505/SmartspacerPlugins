@@ -13,5 +13,6 @@ class DataStoreManager {
         val hideTargetWithoutComplicationsKey = booleanPreferencesKey("target_hide_no_complications")
         val scrollLongTextKey = booleanPreferencesKey("target_scroll_long_text")
         val changeOnUnlockKey = booleanPreferencesKey("target_change_on_unlock")
+        val changeOnHomeKey = booleanPreferencesKey("target_change_on_home")
     }
 }

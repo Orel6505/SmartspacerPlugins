@@ -11,6 +11,7 @@ import androidx.compose.ui.platform.LocalContext
 import com.kieronquinn.app.smartspacer.sdk.provider.SmartspacerTargetProvider
 import com.mikepenz.iconics.typeface.library.community.material.CommunityMaterial
 import data.DataStoreManager.Companion.changeOnUnlockKey
+import data.DataStoreManager.Companion.changeOnHomeKey
 import data.DataStoreManager.Companion.dataStore
 import data.DataStoreManager.Companion.hideTargetWithoutComplicationsKey
 import data.DataStoreManager.Companion.scrollLongTextKey
@@ -51,6 +52,7 @@ class ConfigurationActivity : ComponentActivity() {
             val hideNoComplications = context.dataStore.get(hideTargetWithoutComplicationsKey) == true
             val scrollLongText = context.dataStore.get(scrollLongTextKey) == true
             val changeOnUnlock = context.dataStore.get(changeOnUnlockKey) != false
+            val changeOnHome = context.dataStore.get(changeOnHomeKey) != false
 
             PluginTheme {
                 PreferenceLayout("Lively Greeting") {
@@ -80,6 +82,8 @@ class ConfigurationActivity : ComponentActivity() {
                         checked = scrollLongText
                     )
 
+                    PreferenceHeading("Refresh triggers")
+
                     PreferenceSwitch(
                         iicon = CommunityMaterial.Icon.cmd_cellphone_lock,
                         title = "Change on unlock",
@@ -91,6 +95,18 @@ class ConfigurationActivity : ComponentActivity() {
                             SmartspacerTargetProvider.notifyChange(context, LivelyGreetingTarget::class.java)
                         },
                         checked = changeOnUnlock
+                    )
+
+                    PreferenceSwitch(
+                        iicon = CommunityMaterial.Icon2.cmd_home,
+                        title = "Change when returning home",
+                        description = "Show a new message every time you come back to the home screen",
+                        onCheckedChange = { value ->
+                            context.dataStore.save(changeOnHomeKey, value)
+
+                            SmartspacerTargetProvider.notifyChange(context, LivelyGreetingTarget::class.java)
+                        },
+                        checked = changeOnHome
                     )
                 }
             }
